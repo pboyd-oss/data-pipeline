@@ -1,0 +1,22 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: data-pipeline
+build:
+  artifacts:
+    - image: harbor.tuxgrid.com/team-b/data-pipeline
+      kaniko:
+        dockerfile: Dockerfile
+  cluster:
+    namespace: jenkins
+    dockerConfig:
+      secretName: harbor-docker-cfg
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+      limits:
+        cpu: "2"
+        memory: "2Gi"
+deploy:
+  kubectl: {}

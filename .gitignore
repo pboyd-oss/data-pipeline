@@ -1,0 +1,7 @@
+.terraform/
+*.tfplan
+tfplan
+tfplan.json
+artifacts.json
+deps.ndjson
+build-info.json

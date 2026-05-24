@@ -1,0 +1,28 @@
+pipeline {
+    agent {
+        kubernetes {
+            cloud 'kubernetes'
+            inheritFrom 'default'
+        }
+    }
+
+    parameters {
+        string(name: 'ENVIRONMENT', defaultValue: 'staging',        description: 'Target environment (staging, production-us)')
+        string(name: 'BUILD',       defaultValue: 'lastSuccessful', description: 'Build number or lastSuccessful')
+    }
+
+    stages {
+        stage('Release') {
+            steps {
+                build job: 'platform/team-b/release',
+                      parameters: [
+                          string(name: 'UPSTREAM_JOB',   value: 'teams/team-b/data-pipeline/build/main'),
+                          string(name: 'UPSTREAM_BUILD', value: params.BUILD),
+                          string(name: 'ENVIRONMENT',    value: params.ENVIRONMENT),
+                      ],
+                      wait: true,
+                      propagate: true
+            }
+        }
+    }
+}
